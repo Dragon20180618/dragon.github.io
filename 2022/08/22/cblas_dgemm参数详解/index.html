@@ -20,28 +20,32 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta property="og:type" content="website">
+  <meta name="description" content="cblas_dgemm参数详解[dragon](mailto: &amp;#x77;&amp;#x61;&amp;#x75;&amp;#113;&amp;#x61;&amp;#115;&amp;#x40;&amp;#x67;&amp;#109;&amp;#97;&amp;#105;&amp;#108;&amp;#x2e;&amp;#99;&amp;#111;&amp;#x6d;) 22-8-15 代码12345678910111213141516171819#include &lt;cblas.h&gt;#include">
+<meta property="og:type" content="article">
 <meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://example.com/index.html">
+<meta property="og:url" content="http://example.com/2022/08/22/cblas_dgemm%E5%8F%82%E6%95%B0%E8%AF%A6%E8%A7%A3/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="cblas_dgemm参数详解[dragon](mailto: &amp;#x77;&amp;#x61;&amp;#x75;&amp;#113;&amp;#x61;&amp;#115;&amp;#x40;&amp;#x67;&amp;#109;&amp;#97;&amp;#105;&amp;#108;&amp;#x2e;&amp;#99;&amp;#111;&amp;#x6d;) 22-8-15 代码12345678910111213141516171819#include &lt;cblas.h&gt;#include">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-08-22T06:28:21.452Z">
+<meta property="article:modified_time" content="2022-08-15T06:10:20.874Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://example.com/">
+<link rel="canonical" href="http://example.com/2022/08/22/cblas_dgemm%E5%8F%82%E6%95%B0%E8%AF%A6%E8%A7%A3/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false,
+    isHome : false,
+    isPost : true,
     lang   : 'en'
   };
 </script>
 
-  <title>Hexo</title>
+  <title> | Hexo</title>
   
 
 
@@ -139,9 +143,10 @@
         <div class="content-wrap">
           
 
-          <div class="content index posts-expand">
+          <div class="content post posts-expand">
             
-      
+
+    
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
@@ -157,10 +162,9 @@
       <meta itemprop="name" content="Hexo">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
+        <h1 class="post-title" itemprop="name headline">
           
-            <a href="/2022/08/22/cblas_dgemm%E5%8F%82%E6%95%B0%E8%AF%A6%E8%A7%A3/" class="post-title-link" itemprop="url">Untitled</a>
-        </h2>
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -190,99 +194,37 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="cblas-dgemm参数详解"><a href="#cblas-dgemm参数详解" class="headerlink" title="cblas_dgemm参数详解"></a>cblas_dgemm参数详解</h1><p>[dragon](mailto: <a href="mailto:&#x77;&#x61;&#x75;&#113;&#x61;&#115;&#x40;&#x67;&#109;&#97;&#105;&#108;&#x2e;&#99;&#111;&#x6d;">&#x77;&#x61;&#x75;&#113;&#x61;&#115;&#x40;&#x67;&#109;&#97;&#105;&#108;&#x2e;&#99;&#111;&#x6d;</a>) 22-8-15</p>
+        <h1 id="cblas-dgemm参数详解"><a href="#cblas-dgemm参数详解" class="headerlink" title="cblas_dgemm参数详解"></a>cblas_dgemm参数详解</h1><p>[dragon](mailto: <a href="mailto:&#x77;&#x61;&#x75;&#113;&#x61;&#115;&#x40;&#x67;&#109;&#97;&#105;&#108;&#x2e;&#99;&#111;&#x6d;">&#x77;&#x61;&#x75;&#113;&#x61;&#115;&#x40;&#x67;&#109;&#97;&#105;&#108;&#x2e;&#99;&#111;&#x6d;</a>) 22-8-15</p>
 <h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cblas.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line">  <span class="type">double</span> A[<span class="number">6</span>] = &#123;<span class="number">1.0</span>, <span class="number">10.0</span>, <span class="number">20.0</span>, <span class="number">30.0</span>, <span class="number">40.0</span>, <span class="number">50.0</span>&#125;;</span><br><span class="line">  <span class="type">double</span> B[<span class="number">6</span>] = &#123;<span class="number">1.0</span>, <span class="number">10.0</span>, <span class="number">20.0</span>, <span class="number">30.0</span>, <span class="number">40.0</span>, <span class="number">60.0</span>&#125;;</span><br><span class="line">  <span class="type">double</span> C[<span class="number">9</span>] = &#123;<span class="number">.5</span>, <span class="number">.5</span>, <span class="number">.5</span>, <span class="number">.5</span>, <span class="number">.5</span>, <span class="number">.5</span>, <span class="number">.5</span>, <span class="number">.5</span>, <span class="number">.5</span>&#125;;</span><br><span class="line">  cblas_dgemm(CblasColMajor, CblasNoTrans, CblasTrans, \</span><br><span class="line">              <span class="number">3</span>, <span class="number">3</span>, <span class="number">2</span>, <span class="number">1</span>, A, <span class="number">3</span>, B, <span class="number">3</span>, <span class="number">0</span>, C, <span class="number">3</span>);</span><br><span class="line">  <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; <span class="number">3</span>; j++)</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="number">3</span>; i++)</span><br><span class="line">      <span class="built_in">printf</span>(<span class="string">&quot;%lf &quot;</span>, C[i*<span class="number">3</span>+j]);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h2 id="解释"><a href="#解释" class="headerlink" title="解释"></a>解释</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">cblas_dgemm</span><span class="params">(</span></span><br><span class="line"><span class="params">    	OPENBLAS_CONST <span class="keyword">enum</span> CBLAS_ORDER Order, <span class="comment">//行列主序</span></span></span><br><span class="line"><span class="params">        OPENBLAS_CONST <span class="keyword">enum</span> CBLAS_TRANSPOSE TransA, <span class="comment">//矩阵A转置</span></span></span><br><span class="line"><span class="params">        OPENBLAS_CONST <span class="keyword">enum</span> CBLAS_TRANSPOSE TransB, <span class="comment">//矩阵B转置</span></span></span><br><span class="line"><span class="params">        OPENBLAS_CONST blasint M, <span class="comment">//op(A)的行数</span></span></span><br><span class="line"><span class="params">        OPENBLAS_CONST blasint N, <span class="comment">//op(B)的列数</span></span></span><br><span class="line"><span class="params">        OPENBLAS_CONST blasint K, <span class="comment">//op(A)的列数和op(B)的行数</span></span></span><br><span class="line"><span class="params">        OPENBLAS_CONST <span class="type">double</span> alpha, <span class="comment">//A的缩放</span></span></span><br><span class="line"><span class="params">        OPENBLAS_CONST <span class="type">double</span> *A, <span class="comment">//matrix A</span></span></span><br><span class="line"><span class="params">        OPENBLAS_CONST blasint lda, <span class="comment">//A的第一维度,跟主序有关</span></span></span><br><span class="line"><span class="params">       	OPENBLAS_CONST <span class="type">double</span> *B, <span class="comment">//matrix B</span></span></span><br><span class="line"><span class="params">        OPENBLAS_CONST blasint ldb, <span class="comment">//B的第一维度</span></span></span><br><span class="line"><span class="params">        OPENBLAS_CONST <span class="type">double</span> beta, <span class="comment">//C 的缩放</span></span></span><br><span class="line"><span class="params">        <span class="type">double</span> *C, <span class="comment">//matrix C</span></span></span><br><span class="line"><span class="params">        OPENBLAS_CONST blasint ldc <span class="comment">//C的第一维度</span></span></span><br><span class="line"><span class="params">)</span>;</span><br></pre></td></tr></table></figure>
 
 <p>最终结果为$C=alpha*op(A)<em>op(B)+beta</em>C$</p>
 
-      
     </div>
 
     
     
     
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/08/22/hello-world/">
+        
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-    </span>
 
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/08/22/hello-world/" class="post-title-link" itemprop="url">Hello World</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2022-08-22 13:18:07 / Modified: 13:10:28" itemprop="dateCreated datePublished" datetime="2022-08-22T13:18:07+08:00">2022-08-22</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-
-      
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/08/22/hello-world/" rel="prev" title="Hello World">
+      <i class="fa fa-chevron-left"></i> Hello World
+    </a></div>
+      <div class="post-nav-item"></div>
     </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
       </footer>
+    
   </article>
   
   
-  
-
-
   
 
 
@@ -335,6 +277,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#cblas-dgemm%E5%8F%82%E6%95%B0%E8%AF%A6%E8%A7%A3"><span class="nav-number">1.</span> <span class="nav-text">cblas_dgemm参数详解</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81"><span class="nav-number">1.1.</span> <span class="nav-text">代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E9%87%8A"><span class="nav-number">1.2.</span> <span class="nav-text">解释</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
