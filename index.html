@@ -145,6 +145,269 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/08/23/cuda-namespace-with-some-methods/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Dragon">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Nacy">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/08/23/cuda-namespace-with-some-methods/" class="post-title-link" itemprop="url">cuda namespace with some methods</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-08-23 11:10:23 / Modified: 11:11:10" itemprop="dateCreated datePublished" datetime="2022-08-23T11:10:23+08:00">2022-08-23</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="cuda-namespace-with-some-methods"><a href="#cuda-namespace-with-some-methods" class="headerlink" title="cuda namespace with some methods"></a>cuda namespace with some methods</h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;stdio.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;memory&gt;</span></span></span><br><span class="line"><span class="keyword">namespace</span> cuda</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line">    [[nodiscard]] <span class="function"><span class="type">static</span> <span class="keyword">auto</span> <span class="title">malloc</span><span class="params">(std::<span class="type">size_t</span> <span class="type">const</span> size)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">//nodiscard implies must use it return value, or will encounter an error</span></span><br><span class="line">        <span class="type">static</span> T *d&#123;<span class="literal">nullptr</span>&#125;;</span><br><span class="line">        <span class="built_in">cudaMalloc</span>(&amp;d, <span class="built_in">sizeof</span>(T) * size);</span><br><span class="line">        <span class="keyword">return</span> d;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line">    <span class="function"><span class="type">static</span> <span class="type">void</span> <span class="title">free</span><span class="params">(T *ptr)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (ptr)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">cudaFree</span>(ptr);</span><br><span class="line">            ptr=<span class="literal">nullptr</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line">    [[nodiscard]] <span class="function"><span class="type">static</span> <span class="keyword">auto</span> <span class="title">makeUnique</span><span class="params">(std::<span class="type">size_t</span> size)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> std::unique_ptr&lt;T[], <span class="keyword">decltype</span>(&amp;free&lt;T&gt;)&gt; &#123; <span class="built_in">malloc</span>&lt;T&gt;(size), free&lt;T&gt; &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125; <span class="comment">// namespace name</span></span><br><span class="line"><span class="function">__global__ <span class="type">void</span> <span class="title">kernel</span><span class="params">(float3 *d)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> id = threadIdx.x;</span><br><span class="line">    <span class="comment">// d[id].x=d[id].y=d[id].z=id*1.1;</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%g\t%g\t%g\n&quot;</span>, d[id].x, d[id].y, d[id].z);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">showh</span><span class="params">(float3 *d)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> id = <span class="number">0</span>; id &lt; <span class="number">5</span>; id++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;%g\t%g\t%g\n&quot;</span>, d[id].x, d[id].y, d[id].z);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> cuda;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">auto</span> <span class="type">const</span> count = <span class="number">5</span>;</span><br><span class="line">    <span class="keyword">auto</span> hp_points&#123;std::<span class="built_in">make_unique</span>&lt;float3[]&gt;(count)&#125;;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; count; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        hp_points[i].x=i*<span class="number">1.1</span>;</span><br><span class="line">        hp_points[i].y=i*<span class="number">1.1</span>;</span><br><span class="line">        hp_points[i].z=i*<span class="number">1.1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// showh(hp_points.get());</span></span><br><span class="line">    <span class="keyword">auto</span> dp_points&#123;cuda::<span class="built_in">makeUnique</span>&lt;float3&gt;(count)&#125;;</span><br><span class="line">    <span class="built_in">cudaMemcpy</span>(dp_points.<span class="built_in">get</span>(),hp_points.<span class="built_in">get</span>(), <span class="comment">//get() will return unique ptr&#x27;s address</span></span><br><span class="line">    <span class="built_in">sizeof</span>(float3)*count,cudaMemcpyHostToDevice);</span><br><span class="line">    kernel&lt;&lt;&lt;<span class="number">1</span>,<span class="number">5</span>&gt;&gt;&gt;(dp_points.<span class="built_in">get</span>());</span><br><span class="line">    <span class="built_in">cudaDeviceSynchronize</span>();</span><br><span class="line">    dp_points.~<span class="built_in">unique_ptr</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/08/22/cuda/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Dragon">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Nacy">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/08/22/cuda/" class="post-title-link" itemprop="url">cuda</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-08-22 16:39:25" itemprop="dateCreated datePublished" datetime="2022-08-22T16:39:25+08:00">2022-08-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-08-23 11:13:46" itemprop="dateModified" datetime="2022-08-23T11:13:46+08:00">2022-08-23</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="CUDA"><a href="#CUDA" class="headerlink" title="CUDA"></a>CUDA</h1><p>cuda program kernel function:</p>
+<p><code>__global__ void functionName()&#123;&#125;</code></p>
+<p>or</p>
+<p><code>void __global__ functionName()&#123;&#125;</code></p>
+<hr>
+<h3>Hello World</h3>
+<h4>Hello.cu</h4>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="function">__global__ <span class="type">void</span> <span class="title">GPU_print</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Hello World\n&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc,<span class="type">char</span> **argv)</span></span>&#123;</span><br><span class="line">    GPU_print&lt;&lt;&lt;<span class="number">2</span>,<span class="number">2</span>&gt;&gt;&gt;();</span><br><span class="line">    <span class="built_in">cudaDeviceSynchronize</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Compile:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nvcc Hello.cu -o Hello</span><br></pre></td></tr></table></figure>
+
+<p>Execute:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./Hello</span><br></pre></td></tr></table></figure>
+
+<p>Result:</p>
+<p><code>Hello World</code></p>
+<p><code>Hello World</code></p>
+<p><code>Hello World</code></p>
+<p><code>Hello World</code></p>
+<p>why?  &lt;&lt;&lt;2,2&gt;&gt;&gt;</p>
+<hr>
+<p>CUDA kernel run in Device. We should realise the differences of Host datas with Device datas.</p>
+<p>Let’s see the CUDA functions !</p>
+<p>cudaMalloc(</p>
+<pre><code>                    (void\*\*)&amp;ptr,  int \*ptr -&gt; (void\*\*)&amp;ptr 
+
+                    size, sizeof(ptr_type);
+
+                )
+</code></pre>
+<p>ptr will get some places from Device</p>
+<p>cudaMemcpy(</p>
+<pre><code>                dst, date to dst
+
+                src, date from src
+
+                size, how many bytes
+
+                kind,where to where(cudaMemcpyHostToDevice,cudaMemcpyDeviceToHost and ......)
+
+                )
+</code></pre>
+<p>cudaDeviceSynchronize()</p>
+<p>Wait operate in Device finish</p>
+<hr>
+<p>GPU has lot’s of same things with CPU</p>
+<p>different kinds of memory is one of the same things.</p>
+<h5>dynamic common Element</h5>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">double</span> *a;</span><br><span class="line"><span class="type">int</span> M=<span class="number">1000</span>;</span><br><span class="line"><span class="built_in">cudaMalloc</span>((<span class="type">void</span>**)&amp;a,M);</span><br><span class="line"><span class="built_in">cudaMemcpy</span>(....);</span><br><span class="line">kernel&lt;&lt;&lt;gridSize,blockSize&gt;&gt;&gt;(a);</span><br></pre></td></tr></table></figure>
+
+<h5>static global Element</h5>
+global and static
+
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">__device__ <span class="type">double</span> a[<span class="number">5</span>];</span><br><span class="line">__device__ <span class="type">int</span> b;</span><br></pre></td></tr></table></figure>
+
+<p>compiler should know the size of static global Element,and we need’t be used by arg-way</p>
+<p>needn’t <code>kernel&lt;&lt;&lt;1,1&gt;&gt;&gt;(a);</code></p>
+<h5>constant Element by arg-way</h5>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> a=<span class="number">1</span>;</span><br><span class="line">kernel&lt;&lt;&lt;<span class="number">1</span>,<span class="number">1</span>&gt;&gt;&gt;(a);</span><br></pre></td></tr></table></figure>
+
+<p>read-only and max size is 4KB</p>
+<h5>constant Element by __constant__</h5>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">__constant__ <span class="type">int</span> a=<span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<p>read-only and max size is 64 in most NVIDIA GPU</p>
+<p>How to copy datas from/to constant Element ?</p>
+<p>cudaMemcpyFromSymbol(</p>
+<pre><code>                                            dst, datas to dst
+
+                                            src, datas from src
+
+                                            copykind, cudaMemcpyDeviceToHost
+
+                                            )
+</code></pre>
+<p>cudaMemcpyToSymbol(</p>
+<pre><code>                                        dst, datas to dst
+
+                                        src, datas from src
+
+                                        copykind, cudaMemcpyHostToDevice
+
+                                        )
+</code></pre>
+<h5>dynamic shared memory</h5>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">__global__ <span class="type">void</span> <span class="title">kernel</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="type">int</span> n=<span class="number">10</span>;</span><br><span class="line">	__shared__ <span class="type">int</span> a[n];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>read and write, 64KB per block. same block with same shared memory value</p>
+<h5>static shared memory</h5>
+outside:
+
+<p><code>kernel&lt;&lt;&lt;1,1,sharedMemorySize&gt;&gt;&gt;()</code></p>
+<p>inside:</p>
+<p><code>extern __shared__  double a[]</code></p>
+<p>not *a, pointer isn’t array</p>
+<h5>register memory</h5>
+fast and small
+
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">__global__ <span class="type">void</span> <span class="title">kernel</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="type">int</span> a=<span class="number">1</span>;</span><br><span class="line">    <span class="type">const</span> <span class="type">int</span> b=<span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5>dynamic unified memory</h5>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">double</span> *x,*y;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> M=<span class="built_in">sizeof</span>(<span class="type">double</span>)*<span class="number">10000</span>;</span><br><span class="line"><span class="built_in">cudaMallocManaged</span>((<span class="type">void</span>**)&amp;x,M);</span><br><span class="line"><span class="built_in">cudaMallocManaged</span>((<span class="type">void</span>**)&amp;y,M);</span><br><span class="line">*x=<span class="number">1</span>;</span><br><span class="line">*y=<span class="number">2</span>;</span><br><span class="line">kernel&lt;&lt;&lt;gridSize,blockSize&gt;&gt;&gt;(x,y);</span><br></pre></td></tr></table></figure>
+<h5>static unified memory</h5>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">__device__ __managed__ <span class="type">int</span> ret[<span class="number">1000</span>];</span><br><span class="line">__device__ __managed__ <span class="type">int</span> a;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    kernel&lt;&lt;&lt;gridSize,blockSize&gt;&gt;&gt;();</span><br><span class="line">    <span class="built_in">cudaSynchronize</span>();</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>,a);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5>Free Memory</h5>
+`cudaFree(void* ptr)`
+
+<hr>
+<h3>Atoi operate</h3>
+look like synchronize, but really without synchronize
+
+<p><a href="%E5%8E%9F%E5%AD%90%E5%87%BD%E6%95%B0%E8%A1%A8.md">Table</a></p>
+<h3>CUDA Stream</h3>
+Let's see the functions!
+
+<p><strong>type:</strong> cudaStream_t  stream</p>
+<p>cudaStreamCreate(&amp;stream)</p>
+<p>cudaStreamDestory(stream)</p>
+<p>cudaStreamSynchronize(stream), wait stream finish</p>
+<p>cudaStreamQuery(stream), check stream finish or not, <strong>cudaSuccess</strong> or <strong>cudaErrorNotReady</strong></p>
+<p><strong>run in stream :</strong> <code>kernel&lt;&lt;&lt;gridSize, blockSize,shared_size,stream&gt;&gt;&gt;();</code></p>
+<p>cudaMemcpyAsync(</p>
+<pre><code>                                void *dst
+
+                                const void *src
+
+                                size_t count
+
+                                enum cudaMemcpyKind kind
+
+                                cudaStream_t stream, if you want to use default stream, by 0
+
+                                )
+</code></pre>
+<p>which datas can be MemcpyAsync ? </p>
+<p><code>cudaMallocHost(void**ptr, size_t size)</code></p>
+<p><code>cudaHostAlloc(void**ptr, size_t size,size_t flag)</code></p>
+<p>if flag==cudaHostAllocDefault, cudaMallocHost equal to cudaHostAlloc</p>
+<p><strong>Free:</strong><code>cudaFreeHost(void* ptr)</code></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2022/08/22/cblas-dgemm%E5%8F%82%E6%95%B0%E8%AF%A6%E8%A7%A3/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -184,7 +447,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="cblas-dgemm参数详解"><a href="#cblas-dgemm参数详解" class="headerlink" title="cblas_dgemm参数详解"></a>cblas_dgemm参数详解</h1><p>[dragon](mailto: <a href="mailto:&#119;&#97;&#117;&#x71;&#x61;&#115;&#64;&#103;&#x6d;&#x61;&#105;&#x6c;&#46;&#99;&#x6f;&#x6d;">&#119;&#97;&#117;&#x71;&#x61;&#115;&#64;&#103;&#x6d;&#x61;&#105;&#x6c;&#46;&#99;&#x6f;&#x6d;</a>) 22-8-15</p>
+          <h1 id="cblas-dgemm参数详解"><a href="#cblas-dgemm参数详解" class="headerlink" title="cblas_dgemm参数详解"></a>cblas_dgemm参数详解</h1><p>[dragon](mailto: <a href="mailto:&#119;&#x61;&#117;&#113;&#97;&#x73;&#64;&#x67;&#109;&#x61;&#x69;&#x6c;&#x2e;&#99;&#111;&#109;">&#119;&#x61;&#117;&#113;&#97;&#x73;&#64;&#x67;&#109;&#x61;&#x69;&#x6c;&#x2e;&#99;&#111;&#109;</a>) 22-8-15</p>
 <h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cblas.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line">  <span class="type">double</span> A[<span class="number">6</span>] = &#123;<span class="number">1.0</span>, <span class="number">10.0</span>, <span class="number">20.0</span>, <span class="number">30.0</span>, <span class="number">40.0</span>, <span class="number">50.0</span>&#125;;</span><br><span class="line">  <span class="type">double</span> B[<span class="number">6</span>] = &#123;<span class="number">1.0</span>, <span class="number">10.0</span>, <span class="number">20.0</span>, <span class="number">30.0</span>, <span class="number">40.0</span>, <span class="number">60.0</span>&#125;;</span><br><span class="line">  <span class="type">double</span> C[<span class="number">9</span>] = &#123;<span class="number">.5</span>, <span class="number">.5</span>, <span class="number">.5</span>, <span class="number">.5</span>, <span class="number">.5</span>, <span class="number">.5</span>, <span class="number">.5</span>, <span class="number">.5</span>, <span class="number">.5</span>&#125;;</span><br><span class="line">  cblas_dgemm(CblasColMajor, CblasNoTrans, CblasTrans, \</span><br><span class="line">              <span class="number">3</span>, <span class="number">3</span>, <span class="number">2</span>, <span class="number">1</span>, A, <span class="number">3</span>, B, <span class="number">3</span>, <span class="number">0</span>, C, <span class="number">3</span>);</span><br><span class="line">  <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; <span class="number">3</span>; j++)</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="number">3</span>; i++)</span><br><span class="line">      <span class="built_in">printf</span>(<span class="string">&quot;%lf &quot;</span>, C[i*<span class="number">3</span>+j]);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h2 id="解释"><a href="#解释" class="headerlink" title="解释"></a>解释</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">cblas_dgemm</span><span class="params">(</span></span><br><span class="line"><span class="params">    	OPENBLAS_CONST <span class="keyword">enum</span> CBLAS_ORDER Order, <span class="comment">//行列主序</span></span></span><br><span class="line"><span class="params">        OPENBLAS_CONST <span class="keyword">enum</span> CBLAS_TRANSPOSE TransA, <span class="comment">//矩阵A转置</span></span></span><br><span class="line"><span class="params">        OPENBLAS_CONST <span class="keyword">enum</span> CBLAS_TRANSPOSE TransB, <span class="comment">//矩阵B转置</span></span></span><br><span class="line"><span class="params">        OPENBLAS_CONST blasint M, <span class="comment">//op(A)的行数</span></span></span><br><span class="line"><span class="params">        OPENBLAS_CONST blasint N, <span class="comment">//op(B)的列数</span></span></span><br><span class="line"><span class="params">        OPENBLAS_CONST blasint K, <span class="comment">//op(A)的列数和op(B)的行数</span></span></span><br><span class="line"><span class="params">        OPENBLAS_CONST <span class="type">double</span> alpha, <span class="comment">//A的缩放</span></span></span><br><span class="line"><span class="params">        OPENBLAS_CONST <span class="type">double</span> *A, <span class="comment">//matrix A</span></span></span><br><span class="line"><span class="params">        OPENBLAS_CONST blasint lda, <span class="comment">//A的第一维度,跟主序有关</span></span></span><br><span class="line"><span class="params">       	OPENBLAS_CONST <span class="type">double</span> *B, <span class="comment">//matrix B</span></span></span><br><span class="line"><span class="params">        OPENBLAS_CONST blasint ldb, <span class="comment">//B的第一维度</span></span></span><br><span class="line"><span class="params">        OPENBLAS_CONST <span class="type">double</span> beta, <span class="comment">//C 的缩放</span></span></span><br><span class="line"><span class="params">        <span class="type">double</span> *C, <span class="comment">//matrix C</span></span></span><br><span class="line"><span class="params">        OPENBLAS_CONST blasint ldc <span class="comment">//C的第一维度</span></span></span><br><span class="line"><span class="params">)</span>;</span><br></pre></td></tr></table></figure>
@@ -342,9 +605,13 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-count">4</span>
           <span class="site-state-item-name">posts</span>
         </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">tags</span>
       </div>
   </nav>
 </div>

@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="CUDAcuda program kernel function: __global__ void functionName()&amp;#123;&amp;#125; or void __global__ functionName()&amp;#123;&amp;#125;  Hello World Hello.cu 123456789#include&lt;stdio.h&gt;__global__ void GPU_pri">
+<meta property="og:type" content="article">
+<meta property="og:title" content="cuda">
+<meta property="og:url" content="http://example.com/2022/08/22/cuda/index.html">
+<meta property="og:site_name" content="Nacy">
+<meta property="og:description" content="CUDAcuda program kernel function: __global__ void functionName()&amp;#123;&amp;#125; or void __global__ functionName()&amp;#123;&amp;#125;  Hello World Hello.cu 123456789#include&lt;stdio.h&gt;__global__ void GPU_pri">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-08-22T08:39:25.000Z">
+<meta property="article:modified_time" content="2022-08-23T03:13:46.618Z">
+<meta property="article:author" content="Dragon">
+<meta property="article:tag" content="cuda">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2022/08/22/cuda/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>cuda | Nacy</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Nacy</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/08/22/cuda/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Dragon">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Nacy">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          cuda
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-08-22 16:39:25" itemprop="dateCreated datePublished" datetime="2022-08-22T16:39:25+08:00">2022-08-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-08-23 11:13:46" itemprop="dateModified" datetime="2022-08-23T11:13:46+08:00">2022-08-23</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="CUDA"><a href="#CUDA" class="headerlink" title="CUDA"></a>CUDA</h1><p>cuda program kernel function:</p>
+<p><code>__global__ void functionName()&#123;&#125;</code></p>
+<p>or</p>
+<p><code>void __global__ functionName()&#123;&#125;</code></p>
+<hr>
+<h3>Hello World</h3>
+<h4>Hello.cu</h4>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="function">__global__ <span class="type">void</span> <span class="title">GPU_print</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Hello World\n&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc,<span class="type">char</span> **argv)</span></span>&#123;</span><br><span class="line">    GPU_print&lt;&lt;&lt;<span class="number">2</span>,<span class="number">2</span>&gt;&gt;&gt;();</span><br><span class="line">    <span class="built_in">cudaDeviceSynchronize</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Compile:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nvcc Hello.cu -o Hello</span><br></pre></td></tr></table></figure>
+
+<p>Execute:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./Hello</span><br></pre></td></tr></table></figure>
+
+<p>Result:</p>
+<p><code>Hello World</code></p>
+<p><code>Hello World</code></p>
+<p><code>Hello World</code></p>
+<p><code>Hello World</code></p>
+<p>why?  &lt;&lt;&lt;2,2&gt;&gt;&gt;</p>
+<hr>
+<p>CUDA kernel run in Device. We should realise the differences of Host datas with Device datas.</p>
+<p>Let’s see the CUDA functions !</p>
+<p>cudaMalloc(</p>
+<pre><code>                    (void\*\*)&amp;ptr,  int \*ptr -&gt; (void\*\*)&amp;ptr 
+
+                    size, sizeof(ptr_type);
+
+                )
+</code></pre>
+<p>ptr will get some places from Device</p>
+<p>cudaMemcpy(</p>
+<pre><code>                dst, date to dst
+
+                src, date from src
+
+                size, how many bytes
+
+                kind,where to where(cudaMemcpyHostToDevice,cudaMemcpyDeviceToHost and ......)
+
+                )
+</code></pre>
+<p>cudaDeviceSynchronize()</p>
+<p>Wait operate in Device finish</p>
+<hr>
+<p>GPU has lot’s of same things with CPU</p>
+<p>different kinds of memory is one of the same things.</p>
+<h5>dynamic common Element</h5>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">double</span> *a;</span><br><span class="line"><span class="type">int</span> M=<span class="number">1000</span>;</span><br><span class="line"><span class="built_in">cudaMalloc</span>((<span class="type">void</span>**)&amp;a,M);</span><br><span class="line"><span class="built_in">cudaMemcpy</span>(....);</span><br><span class="line">kernel&lt;&lt;&lt;gridSize,blockSize&gt;&gt;&gt;(a);</span><br></pre></td></tr></table></figure>
+
+<h5>static global Element</h5>
+global and static
+
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">__device__ <span class="type">double</span> a[<span class="number">5</span>];</span><br><span class="line">__device__ <span class="type">int</span> b;</span><br></pre></td></tr></table></figure>
+
+<p>compiler should know the size of static global Element,and we need’t be used by arg-way</p>
+<p>needn’t <code>kernel&lt;&lt;&lt;1,1&gt;&gt;&gt;(a);</code></p>
+<h5>constant Element by arg-way</h5>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> a=<span class="number">1</span>;</span><br><span class="line">kernel&lt;&lt;&lt;<span class="number">1</span>,<span class="number">1</span>&gt;&gt;&gt;(a);</span><br></pre></td></tr></table></figure>
+
+<p>read-only and max size is 4KB</p>
+<h5>constant Element by __constant__</h5>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">__constant__ <span class="type">int</span> a=<span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<p>read-only and max size is 64 in most NVIDIA GPU</p>
+<p>How to copy datas from/to constant Element ?</p>
+<p>cudaMemcpyFromSymbol(</p>
+<pre><code>                                            dst, datas to dst
+
+                                            src, datas from src
+
+                                            copykind, cudaMemcpyDeviceToHost
+
+                                            )
+</code></pre>
+<p>cudaMemcpyToSymbol(</p>
+<pre><code>                                        dst, datas to dst
+
+                                        src, datas from src
+
+                                        copykind, cudaMemcpyHostToDevice
+
+                                        )
+</code></pre>
+<h5>dynamic shared memory</h5>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">__global__ <span class="type">void</span> <span class="title">kernel</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="type">int</span> n=<span class="number">10</span>;</span><br><span class="line">	__shared__ <span class="type">int</span> a[n];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>read and write, 64KB per block. same block with same shared memory value</p>
+<h5>static shared memory</h5>
+outside:
+
+<p><code>kernel&lt;&lt;&lt;1,1,sharedMemorySize&gt;&gt;&gt;()</code></p>
+<p>inside:</p>
+<p><code>extern __shared__  double a[]</code></p>
+<p>not *a, pointer isn’t array</p>
+<h5>register memory</h5>
+fast and small
+
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">__global__ <span class="type">void</span> <span class="title">kernel</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="type">int</span> a=<span class="number">1</span>;</span><br><span class="line">    <span class="type">const</span> <span class="type">int</span> b=<span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5>dynamic unified memory</h5>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">double</span> *x,*y;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> M=<span class="built_in">sizeof</span>(<span class="type">double</span>)*<span class="number">10000</span>;</span><br><span class="line"><span class="built_in">cudaMallocManaged</span>((<span class="type">void</span>**)&amp;x,M);</span><br><span class="line"><span class="built_in">cudaMallocManaged</span>((<span class="type">void</span>**)&amp;y,M);</span><br><span class="line">*x=<span class="number">1</span>;</span><br><span class="line">*y=<span class="number">2</span>;</span><br><span class="line">kernel&lt;&lt;&lt;gridSize,blockSize&gt;&gt;&gt;(x,y);</span><br></pre></td></tr></table></figure>
+<h5>static unified memory</h5>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">__device__ __managed__ <span class="type">int</span> ret[<span class="number">1000</span>];</span><br><span class="line">__device__ __managed__ <span class="type">int</span> a;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    kernel&lt;&lt;&lt;gridSize,blockSize&gt;&gt;&gt;();</span><br><span class="line">    <span class="built_in">cudaSynchronize</span>();</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>,a);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5>Free Memory</h5>
+`cudaFree(void* ptr)`
+
+<hr>
+<h3>Atoi operate</h3>
+look like synchronize, but really without synchronize
+
+<p><a href="%E5%8E%9F%E5%AD%90%E5%87%BD%E6%95%B0%E8%A1%A8.md">Table</a></p>
+<h3>CUDA Stream</h3>
+Let's see the functions!
+
+<p><strong>type:</strong> cudaStream_t  stream</p>
+<p>cudaStreamCreate(&amp;stream)</p>
+<p>cudaStreamDestory(stream)</p>
+<p>cudaStreamSynchronize(stream), wait stream finish</p>
+<p>cudaStreamQuery(stream), check stream finish or not, <strong>cudaSuccess</strong> or <strong>cudaErrorNotReady</strong></p>
+<p><strong>run in stream :</strong> <code>kernel&lt;&lt;&lt;gridSize, blockSize,shared_size,stream&gt;&gt;&gt;();</code></p>
+<p>cudaMemcpyAsync(</p>
+<pre><code>                                void *dst
+
+                                const void *src
+
+                                size_t count
+
+                                enum cudaMemcpyKind kind
+
+                                cudaStream_t stream, if you want to use default stream, by 0
+
+                                )
+</code></pre>
+<p>which datas can be MemcpyAsync ? </p>
+<p><code>cudaMallocHost(void**ptr, size_t size)</code></p>
+<p><code>cudaHostAlloc(void**ptr, size_t size,size_t flag)</code></p>
+<p>if flag==cudaHostAllocDefault, cudaMallocHost equal to cudaHostAlloc</p>
+<p><strong>Free:</strong><code>cudaFreeHost(void* ptr)</code></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/cuda/" rel="tag"># cuda</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/08/22/cblas-dgemm%E5%8F%82%E6%95%B0%E8%AF%A6%E8%A7%A3/" rel="prev" title="cblas_dgemm参数详解">
+      <i class="fa fa-chevron-left"></i> cblas_dgemm参数详解
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/08/23/cuda-namespace-with-some-methods/" rel="next" title="cuda namespace with some methods">
+      cuda namespace with some methods <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#CUDA"><span class="nav-number">1.</span> <span class="nav-text">CUDA</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.0.1.</span> <span class="nav-text">Hello World</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link"><span class="nav-number">1.0.1.1.</span> <span class="nav-text">Hello.cu</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link"><span class="nav-number">1.0.1.1.1.</span> <span class="nav-text">dynamic common Element</span></a></li><li class="nav-item nav-level-5"><a class="nav-link"><span class="nav-number">1.0.1.1.2.</span> <span class="nav-text">static global Element</span></a></li><li class="nav-item nav-level-5"><a class="nav-link"><span class="nav-number">1.0.1.1.3.</span> <span class="nav-text">constant Element by arg-way</span></a></li><li class="nav-item nav-level-5"><a class="nav-link"><span class="nav-number">1.0.1.1.4.</span> <span class="nav-text">constant Element by __constant__</span></a></li><li class="nav-item nav-level-5"><a class="nav-link"><span class="nav-number">1.0.1.1.5.</span> <span class="nav-text">dynamic shared memory</span></a></li><li class="nav-item nav-level-5"><a class="nav-link"><span class="nav-number">1.0.1.1.6.</span> <span class="nav-text">static shared memory</span></a></li><li class="nav-item nav-level-5"><a class="nav-link"><span class="nav-number">1.0.1.1.7.</span> <span class="nav-text">register memory</span></a></li><li class="nav-item nav-level-5"><a class="nav-link"><span class="nav-number">1.0.1.1.8.</span> <span class="nav-text">dynamic unified memory</span></a></li><li class="nav-item nav-level-5"><a class="nav-link"><span class="nav-number">1.0.1.1.9.</span> <span class="nav-text">static unified memory</span></a></li><li class="nav-item nav-level-5"><a class="nav-link"><span class="nav-number">1.0.1.1.10.</span> <span class="nav-text">Free Memory</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.0.2.</span> <span class="nav-text">Atoi operate</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.0.3.</span> <span class="nav-text">CUDA Stream</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Dragon</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Dragon</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,255' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
