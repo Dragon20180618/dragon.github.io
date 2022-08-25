@@ -145,6 +145,92 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/08/25/OpenBlas-Make-Test/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avator.gif">
+      <meta itemprop="name" content="Dragon">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Nacy Ever">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/08/25/OpenBlas-Make-Test/" class="post-title-link" itemprop="url">OpenBlas Make&Test</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-08-25 09:17:16 / Modified: 09:18:43" itemprop="dateCreated datePublished" datetime="2022-08-25T09:17:16+08:00">2022-08-25</time>
+            </span>
+
+          
+            <span id="/2022/08/25/OpenBlas-Make-Test/" class="post-meta-item leancloud_visitors" data-flag-title="OpenBlas Make&Test" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine: </span>
+    
+    <a title="valine" href="/2022/08/25/OpenBlas-Make-Test/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/08/25/OpenBlas-Make-Test/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="OpenBlas-Make"><a href="#OpenBlas-Make" class="headerlink" title="OpenBlas-Make"></a>OpenBlas-Make</h1><h2 id="environment"><a href="#environment" class="headerlink" title="environment:"></a>environment:</h2><ul>
+<li>redhat</li>
+<li>gcc version 4.8.5 20150623 (Red Hat 4.8.5-36) (GCC)<h2 id="build"><a href="#build" class="headerlink" title="build"></a>build</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">make CC=gcc FC=gfortran make_NB_JOBS=1</span><br><span class="line">make install PREFIX=&lt;install_path&gt;</span><br></pre></td></tr></table></figure>
+if you don’t make with suffix <code>make_NB_JOBS</code>, and has a old lapack in you machine,</li>
+</ul>
+<p>openblas will generate before included lapack built, And won’t call the old lapack lib.</p>
+<h2 id="test"><a href="#test" class="headerlink" title="test"></a>test</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cblas.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">int</span> i=<span class="number">0</span>;</span><br><span class="line">  <span class="type">double</span> A[<span class="number">6</span>] = &#123;<span class="number">1.0</span>,<span class="number">2.0</span>,<span class="number">1.0</span>,<span class="number">-3.0</span>,<span class="number">4.0</span>,<span class="number">-1.0</span>&#125;;         </span><br><span class="line">  <span class="type">double</span> B[<span class="number">6</span>] = &#123;<span class="number">1.0</span>,<span class="number">2.0</span>,<span class="number">1.0</span>,<span class="number">-3.0</span>,<span class="number">4.0</span>,<span class="number">-1.0</span>&#125;;  </span><br><span class="line">  <span class="type">double</span> C[<span class="number">9</span>] = &#123;<span class="number">.5</span>,<span class="number">.5</span>,<span class="number">.5</span>,<span class="number">.5</span>,<span class="number">.5</span>,<span class="number">.5</span>,<span class="number">.5</span>,<span class="number">.5</span>,<span class="number">.5</span>&#125;; </span><br><span class="line">  cblas_dgemm(CblasColMajor, CblasNoTrans, CblasTrans,<span class="number">3</span>,<span class="number">3</span>,<span class="number">2</span>,<span class="number">1</span>,A, <span class="number">3</span>, B, <span class="number">3</span>,<span class="number">2</span>,C,<span class="number">3</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span>(i=<span class="number">0</span>; i&lt;<span class="number">9</span>; i++)</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%lf &quot;</span>, C[i]);</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">gcc -I ~/OpenBLAS/include  -L ~/OpenBLAS/lib -lopenblas main.cpp -o solver</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">./solver</span></span><br><span class="line">11.000000 -9.000000 5.000000 -9.000000 21.000000 -1.000000 5.000000 -1.000000 3.000000</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2022/08/23/debug-fortran-in-vscode/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -604,7 +690,7 @@ Let's see the functions!
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="cblas-dgemm参数详解"><a href="#cblas-dgemm参数详解" class="headerlink" title="cblas_dgemm参数详解"></a>cblas_dgemm参数详解</h1><p>[dragon](mailto: <a href="mailto:&#119;&#x61;&#x75;&#x71;&#x61;&#115;&#x40;&#x67;&#x6d;&#x61;&#x69;&#108;&#46;&#x63;&#x6f;&#109;">&#119;&#x61;&#x75;&#x71;&#x61;&#115;&#x40;&#x67;&#x6d;&#x61;&#x69;&#108;&#46;&#x63;&#x6f;&#109;</a>) 22-8-15</p>
+          <h1 id="cblas-dgemm参数详解"><a href="#cblas-dgemm参数详解" class="headerlink" title="cblas_dgemm参数详解"></a>cblas_dgemm参数详解</h1><p>[dragon](mailto: <a href="mailto:&#119;&#97;&#x75;&#113;&#x61;&#x73;&#x40;&#x67;&#x6d;&#x61;&#105;&#108;&#x2e;&#x63;&#x6f;&#x6d;">&#119;&#97;&#x75;&#113;&#x61;&#x73;&#x40;&#x67;&#x6d;&#x61;&#105;&#108;&#x2e;&#x63;&#x6f;&#x6d;</a>) 22-8-15</p>
 <h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cblas.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line">  <span class="type">double</span> A[<span class="number">6</span>] = &#123;<span class="number">1.0</span>, <span class="number">10.0</span>, <span class="number">20.0</span>, <span class="number">30.0</span>, <span class="number">40.0</span>, <span class="number">50.0</span>&#125;;</span><br><span class="line">  <span class="type">double</span> B[<span class="number">6</span>] = &#123;<span class="number">1.0</span>, <span class="number">10.0</span>, <span class="number">20.0</span>, <span class="number">30.0</span>, <span class="number">40.0</span>, <span class="number">60.0</span>&#125;;</span><br><span class="line">  <span class="type">double</span> C[<span class="number">9</span>] = &#123;<span class="number">.5</span>, <span class="number">.5</span>, <span class="number">.5</span>, <span class="number">.5</span>, <span class="number">.5</span>, <span class="number">.5</span>, <span class="number">.5</span>, <span class="number">.5</span>, <span class="number">.5</span>&#125;;</span><br><span class="line">  cblas_dgemm(CblasColMajor, CblasNoTrans, CblasTrans, \</span><br><span class="line">              <span class="number">3</span>, <span class="number">3</span>, <span class="number">2</span>, <span class="number">1</span>, A, <span class="number">3</span>, B, <span class="number">3</span>, <span class="number">0</span>, C, <span class="number">3</span>);</span><br><span class="line">  <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; <span class="number">3</span>; j++)</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="number">3</span>; i++)</span><br><span class="line">      <span class="built_in">printf</span>(<span class="string">&quot;%lf &quot;</span>, C[i*<span class="number">3</span>+j]);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h2 id="解释"><a href="#解释" class="headerlink" title="解释"></a>解释</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">cblas_dgemm</span><span class="params">(</span></span><br><span class="line"><span class="params">    	OPENBLAS_CONST <span class="keyword">enum</span> CBLAS_ORDER Order, <span class="comment">//行列主序</span></span></span><br><span class="line"><span class="params">        OPENBLAS_CONST <span class="keyword">enum</span> CBLAS_TRANSPOSE TransA, <span class="comment">//矩阵A转置</span></span></span><br><span class="line"><span class="params">        OPENBLAS_CONST <span class="keyword">enum</span> CBLAS_TRANSPOSE TransB, <span class="comment">//矩阵B转置</span></span></span><br><span class="line"><span class="params">        OPENBLAS_CONST blasint M, <span class="comment">//op(A)的行数</span></span></span><br><span class="line"><span class="params">        OPENBLAS_CONST blasint N, <span class="comment">//op(B)的列数</span></span></span><br><span class="line"><span class="params">        OPENBLAS_CONST blasint K, <span class="comment">//op(A)的列数和op(B)的行数</span></span></span><br><span class="line"><span class="params">        OPENBLAS_CONST <span class="type">double</span> alpha, <span class="comment">//A的缩放</span></span></span><br><span class="line"><span class="params">        OPENBLAS_CONST <span class="type">double</span> *A, <span class="comment">//matrix A</span></span></span><br><span class="line"><span class="params">        OPENBLAS_CONST blasint lda, <span class="comment">//A的第一维度,跟主序有关</span></span></span><br><span class="line"><span class="params">       	OPENBLAS_CONST <span class="type">double</span> *B, <span class="comment">//matrix B</span></span></span><br><span class="line"><span class="params">        OPENBLAS_CONST blasint ldb, <span class="comment">//B的第一维度</span></span></span><br><span class="line"><span class="params">        OPENBLAS_CONST <span class="type">double</span> beta, <span class="comment">//C 的缩放</span></span></span><br><span class="line"><span class="params">        <span class="type">double</span> *C, <span class="comment">//matrix C</span></span></span><br><span class="line"><span class="params">        OPENBLAS_CONST blasint ldc <span class="comment">//C的第一维度</span></span></span><br><span class="line"><span class="params">)</span>;</span><br></pre></td></tr></table></figure>
@@ -785,12 +871,12 @@ Let's see the functions!
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-count">6</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-count">4</span>
         <span class="site-state-item-name">tags</span>
       </div>
   </nav>
