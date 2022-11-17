@@ -145,6 +145,92 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/11/17/makefile-wildcard/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avator.gif">
+      <meta itemprop="name" content="Dragon">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Nacy Ever">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/11/17/makefile-wildcard/" class="post-title-link" itemprop="url">makefile wildcard</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-11-17 14:36:31 / Modified: 14:37:27" itemprop="dateCreated datePublished" datetime="2022-11-17T14:36:31+08:00">2022-11-17</time>
+            </span>
+
+          
+            <span id="/2022/11/17/makefile-wildcard/" class="post-meta-item leancloud_visitors" data-flag-title="makefile wildcard" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine: </span>
+    
+    <a title="valine" href="/2022/11/17/makefile-wildcard/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/11/17/makefile-wildcard/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="文件列表"><a href="#文件列表" class="headerlink" title="文件列表"></a>文件列表</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">main.f90</span><br><span class="line">makefile</span><br><span class="line">sub1.f90</span><br><span class="line">sub2.f90</span><br><span class="line">sub3.f90</span><br></pre></td></tr></table></figure>
+<h2 id="makfile代码"><a href="#makfile代码" class="headerlink" title="makfile代码"></a>makfile代码</h2><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">main = main.f90</span><br><span class="line"></span><br><span class="line">SRC = <span class="variable">$(<span class="built_in">wildcard</span> *.f90)</span></span><br><span class="line"></span><br><span class="line">SRC := <span class="variable">$(<span class="built_in">filter</span>-out <span class="variable">$(main)</span>,<span class="variable">$(SRC)</span>)</span></span><br><span class="line"></span><br><span class="line">SRC := <span class="variable">$(<span class="built_in">patsubst</span> %.f90, %.o, <span class="variable">$(SRC)</span>)</span></span><br><span class="line"></span><br><span class="line"><span class="section">main:</span></span><br><span class="line"></span><br><span class="line">    echo <span class="variable">$(SRC)</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>wildcard<br>  在对变量调用时，保持通配符特性</li>
+<li>filter-out<br>  过滤器，删除后面跟的第一个参数</li>
+<li>patsubst<br>  将变量中元素根据参数替换，上述代码将所有.f90替换为.o<h2 id="执行结果"><a href="#执行结果" class="headerlink" title="执行结果"></a>执行结果</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$</span><span class="language-bash">&gt; make</span></span><br><span class="line">echo  sub1.o  sub2.o  sub3.o</span><br><span class="line"> sub1.o  sub2.o  sub3.o</span><br></pre></td></tr></table></figure></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2022/08/25/OpenBlas-Make-Test/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -871,12 +957,12 @@ Let's see the functions!
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-count">7</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">5</span>
         <span class="site-state-item-name">tags</span>
       </div>
   </nav>
