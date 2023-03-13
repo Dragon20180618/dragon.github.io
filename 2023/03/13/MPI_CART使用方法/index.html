@@ -28,7 +28,7 @@
 <meta property="og:description" content="MPI_Cart_Create将一维的通信空间转为多维 接口 1234567subroutine MPI_Cart_shift(comm, direction, disp, rank_source, rank_dest)        integer,intent(in)  ::comm, 		!通信域        integer,intent(in)  ::direction,    !维度序">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-03-13T07:50:12.000Z">
-<meta property="article:modified_time" content="2023-03-13T07:56:09.529Z">
+<meta property="article:modified_time" content="2023-03-13T08:04:13.736Z">
 <meta property="article:author" content="Dragon">
 <meta property="article:tag" content="C">
 <meta name="twitter:card" content="summary">
@@ -175,7 +175,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2023-03-13 15:50:12 / Modified: 15:56:09" itemprop="dateCreated datePublished" datetime="2023-03-13T15:50:12+08:00">2023-03-13</time>
+              <time title="Created: 2023-03-13 15:50:12 / Modified: 16:04:13" itemprop="dateCreated datePublished" datetime="2023-03-13T15:50:12+08:00">2023-03-13</time>
             </span>
 
           
@@ -225,7 +225,7 @@
 <p>第一维度的period设置为.false.，导致网络在第一维度不是环状的，而是线性的；</p>
 <p>第二维度的period设置为.true.，导致网络在第二维度是环状的，最后一个进程的下一个进程是第一个进程。</p>
 <p>这种设置方式会产生一个类似圆柱形的结构，圆柱的底是头尾连接的，圆柱的高是头尾分离的。</p>
-<p>因为MPI_Cart_shift选取的维度是第一维度，且period(1)==.false.，所以0<del>2进程的src为-1，6</del>8进程的dest为-1。</p>
+<p>因为MPI_Cart_shift选取的维度是第一维度，且period(1)==.false.，所以0~2进程的src为-1，6~8进程的dest为-1。</p>
 <p>以下是period(1)==.true.时程序的输出。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">0 of           9 |           6 of           3 | T</span><br><span class="line">6 of           9 |           3 of           0 | T</span><br><span class="line">8 of           9 |           5 of           2 | T 8从5接受，发送到2</span><br><span class="line">7 of           9 |           4 of           1 | T</span><br><span class="line">1 of           9 |           7 of           4 | T</span><br><span class="line">3 of           9 |           0 of           6 | T</span><br><span class="line">2 of           9 |           8 of           5 | T</span><br><span class="line">4 of           9 |           1 of           7 | T</span><br><span class="line">5 of           9 |           2 of           8 | T</span><br></pre></td></tr></table></figure>
 
