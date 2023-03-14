@@ -169,10 +169,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2023-03-13 15:50:12 / Modified: 16:04:13" itemprop="dateCreated datePublished" datetime="2023-03-13T15:50:12+08:00">2023-03-13</time>
+              <time title="Created: 2023-03-13 15:50:12" itemprop="dateCreated datePublished" datetime="2023-03-13T15:50:12+08:00">2023-03-13</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-03-14 09:52:11" itemprop="dateModified" datetime="2023-03-14T09:52:11+08:00">2023-03-14</time>
+              </span>
 
           
             <span id="/2023/03/13/MPI_CART%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/" class="post-meta-item leancloud_visitors" data-flag-title="MPI_CART使用方法" title="Views">
@@ -225,6 +231,14 @@
 <p>以下是period(1)==.true.时程序的输出。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">0 of           9 |           6 of           3 | T</span><br><span class="line">6 of           9 |           3 of           0 | T</span><br><span class="line">8 of           9 |           5 of           2 | T 8从5接受，发送到2</span><br><span class="line">7 of           9 |           4 of           1 | T</span><br><span class="line">1 of           9 |           7 of           4 | T</span><br><span class="line">3 of           9 |           0 of           6 | T</span><br><span class="line">2 of           9 |           8 of           5 | T</span><br><span class="line">4 of           9 |           1 of           7 | T</span><br><span class="line">5 of           9 |           2 of           8 | T</span><br></pre></td></tr></table></figure>
 
+<p>MPI_Cart_Create函数的reorder参数是用来指定创建出来的Cartesian拓扑是否可以被重新排序的。具体来说，如果reorder参数被设置为1，那么MPI库就可以为了提高性能而重新排列进程的拓扑结构。如果reorder参数被设置为0，那么MPI库就必须按照进程的原始顺序来创建Cartesian拓扑结构。</p>
+<p>当reorder参数被设置为1时，MPI库可以为了提高性能而重新排列进程的拓扑结构。例如，假设原始的进程布局如下所示：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">0 1 2 3</span><br><span class="line">4 5 6 7</span><br><span class="line">8 9 10 11</span><br></pre></td></tr></table></figure>
+
+<p>如果reorder参数被设置为1，MPI库可以重新排列进程的拓扑结构，例如：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">0 4 8 9</span><br><span class="line">1 5 6 10</span><br><span class="line">2 3 7 11</span><br></pre></td></tr></table></figure>
+
+<p>这样做的目的是为了使相邻的进程在物理空间中更接近，从而减少通信延迟。但是需要注意的是，重新排序进程的拓扑结构可能会影响到原始程序的正确性，因此在使用该特性时需要小心谨慎。</p>
 
       
     </div>
