@@ -95,7 +95,6 @@
             const apiKey = document.getElementById("ApikeyInput").value;
             const apiUrl = 'https://api.openai.com/v1/chat/completions';
 
-            const prompt = 'Once upon a time';
             // const maxTokens = 3000;
             var res = "";
             fetch(apiUrl, {
@@ -140,7 +139,7 @@
     <head>
 
     <body>
-        <li id="setToCenter">Gpt-3.5-turbo key<input id="ApikeyInput"></input></li>
+        <li id="setToCenter">Gpt-3.5-turbo key<input id="ApikeyInput" type="password"></input></li>
         <ul id="QRList">
         </ul>
         <div id="bottom">
