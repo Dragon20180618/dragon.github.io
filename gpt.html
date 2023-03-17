@@ -9,9 +9,11 @@
             list-style-type: none;
             padding: 0;
         }
-        #bottom{
+
+        #bottom {
             text-align: center;
         }
+
         #setToCenter {
             margin: 10px;
             font-size: 20px;
@@ -22,6 +24,7 @@
             border-radius: 5px;
             text-align: center;
         }
+
         #QRList li {
             margin: 10px;
             font-size: 20px;
@@ -78,7 +81,7 @@
 
                     // Set the text content of the <li> element
                     li.textContent = text;
-                    li.id="setToCenter";
+                    li.id = "setToCenter";
                     // Append the <li> element to the <ul> element
                     ul.appendChild(li);
                     console.log(text);
@@ -90,6 +93,32 @@
                 }
             }
         });
+        function send() {
+            if (statusVariable) {
+                alert("等待结果");
+            }
+            else {
+                statusVariable = true;
+                var text = document.getElementById("question").value;
+                // Get the <ul> element
+                const ul = document.querySelector('ul');
+
+                // Create a new <li> element
+                const li = document.createElement('li');
+
+                // Set the text content of the <li> element
+                li.textContent = text;
+                li.id = "setToCenter";
+                // Append the <li> element to the <ul> element
+                ul.appendChild(li);
+                console.log(text);
+                question[question.length] = { "role": "user", "content": text };
+
+                //清除输入区
+                document.getElementById('question').value = '';
+                getAnswer();
+            }
+        }
         function getAnswer() {
             status = true;
             const apiKey = document.getElementById("ApikeyInput").value;
@@ -145,6 +174,7 @@
         <div id="bottom">
             <button onclick="question=[];getElementById('QRList').innerHTML=''">清理</button>
             <input id="question" type="text">
+            <button onclick="send()">发送</button>
         </div>
         <div class="right-bottom"> dragon 2023/3/17 </div>
     </body>
