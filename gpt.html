@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+
+<html>
+
+<head>
+    <style>
+        #QRList {
+            list-style-type: none;
+            padding: 0;
+        }
+        #bottom{
+            text-align: center;
+        }
+        #setToCenter {
+            margin: 10px;
+            font-size: 20px;
+            font-weight: bold;
+            background-color: #f5f5f5;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        #QRList li {
+            margin: 10px;
+            font-size: 20px;
+            font-weight: bold;
+            background-color: #f5f5f5;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #3e8e41;
+        }
+
+        input#question {
+            margin-top: 20px;
+            font-size: 20px;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0 0 5px #ccc;
+        }
+    </style>
+    <script type="text/javascript"
+        src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script src="https://cdn.jsdelivr.net/npm/showdown@1.9.1/dist/showdown.min.js"></script>
+    <script>
+        var question = []
+        var statusVariable = false;
+        document.addEventListener("keydown", function (event) {
+            if (event.keyCode === 13) {
+                if (statusVariable) {
+                    alert("等待结果");
+                }
+                else {
+                    statusVariable = true;
+                    var text = document.getElementById("question").value;
+                    // Get the <ul> element
+                    const ul = document.querySelector('ul');
+
+                    // Create a new <li> element
+                    const li = document.createElement('li');
+
+                    // Set the text content of the <li> element
+                    li.textContent = text;
+                    li.id="setToCenter";
+                    // Append the <li> element to the <ul> element
+                    ul.appendChild(li);
+                    console.log(text);
+                    question[question.length] = { "role": "user", "content": text };
+
+                    //清除输入区
+                    document.getElementById('question').value = '';
+                    getAnswer();
+                }
+            }
+        });
+        function getAnswer() {
+            status = true;
+            const apiKey = document.getElementById("ApikeyInput").value;
+            const apiUrl = 'https://api.openai.com/v1/chat/completions';
+
+            const prompt = 'Once upon a time';
+            // const maxTokens = 3000;
+            var res = "";
+            fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${apiKey}`
+                },
+                body: JSON.stringify({
+                    model: "gpt-3.5-turbo",
+                    messages: question
+                    // max_tokens: maxTokens
+                })
+            }).then(response => response.json()).then(data => {
+                res = data.choices[0]['message']['content']
+                question[question.length] = { "role": "assistant", "content": res };
+            }).catch(error => {
+                console.error('Error:', error);
+                res = "something error"
+            }).finally(error => {
+                //转换为markdown
+                const converter = new showdown.Converter();
+                //mathjax无法识别单个$字符
+                html = converter.makeHtml(res);
+                html = html.replace(/(?<!\$)\$(?!\$)/g, "")
+                //添加到网页中    
+                const ul = document.querySelector('ul');
+                const li = document.createElement('li');
+                li.innerHTML = html;
+                ul.appendChild(li);
+                //输出到控制台
+                console.log(res);
+                console.log(html)
+                statusVariable = false;
+                //重新渲染界面
+                MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+            });
+            // console.log(res)
+        }
+    </script>
+
+    <head>
+
+    <body>
+        <li id="setToCenter">Gpt-3.5-turbo key<input id="ApikeyInput"></input></li>
+        <ul id="QRList">
+        </ul>
+        <div id="bottom">
+            <button onclick="question=[];getElementById('QRList').innerHTML=''">清理</button>
+            <input id="question" type="text">
+        </div>
+        <div class="right-bottom"> dragon 2023/3/17 </div>
+    </body>
+
+</html>
