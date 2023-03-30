@@ -146,7 +146,7 @@
             }).finally(error => {
                 //转换为markdown
                 const converter = new showdown.Converter();
-                //mathjax无法识别单个$字符
+                //mathjax无法识别单个$字符，直接将它删去
                 html = converter.makeHtml(res);
                 html = html.replace(/(?<!\$)\$(?!\$)/g, "")
                 //添加到网页中    

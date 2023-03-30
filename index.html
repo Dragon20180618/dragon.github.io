@@ -146,6 +146,94 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/03/30/%E7%A5%9E%E5%A8%81Fortran%E6%A0%B7%E4%BE%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avator.gif">
+      <meta itemprop="name" content="Dragon">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ding~">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/03/30/%E7%A5%9E%E5%A8%81Fortran%E6%A0%B7%E4%BE%8B/" class="post-title-link" itemprop="url">神威Fortran样例</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2023-03-30 15:26:14 / Modified: 15:33:31" itemprop="dateCreated datePublished" datetime="2023-03-30T15:26:14+08:00">2023-03-30</time>
+            </span>
+
+          
+            <span id="/2023/03/30/%E7%A5%9E%E5%A8%81Fortran%E6%A0%B7%E4%BE%8B/" class="post-meta-item leancloud_visitors" data-flag-title="神威Fortran样例" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine: </span>
+    
+    <a title="valine" href="/2023/03/30/%E7%A5%9E%E5%A8%81Fortran%E6%A0%B7%E4%BE%8B/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2023/03/30/%E7%A5%9E%E5%A8%81Fortran%E6%A0%B7%E4%BE%8B/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="主核代码-main-f90"><a href="#主核代码-main-f90" class="headerlink" title="主核代码 main.f90"></a>主核代码 main.f90</h3><figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">program</span></span> main</span><br><span class="line">    <span class="keyword">use</span> utility</span><br><span class="line">    <span class="keyword">implicit</span> <span class="keyword">none</span></span><br><span class="line">    <span class="keyword">integer</span> :: i, j</span><br><span class="line">    <span class="keyword">integer</span> :: N = <span class="number">10</span></span><br><span class="line">    <span class="keyword">integer</span>, <span class="keyword">pointer</span> :: matrix_A(:,:)</span><br><span class="line">    <span class="keyword">integer</span>, <span class="keyword">pointer</span> :: vector_B(:)</span><br><span class="line">    <span class="keyword">integer</span>, <span class="keyword">pointer</span> :: vector_C(:)</span><br><span class="line">    <span class="keyword">type</span>(ParaType)::para</span><br><span class="line">    <span class="keyword">integer</span>, <span class="keyword">external</span> :: slave_func</span><br><span class="line">    <span class="built_in">allocate</span>(matrix_A(N,N), vector_B(N), vector_C(N))</span><br><span class="line">    para%N = N</span><br><span class="line">    para%matrix_A =&gt; matrix_A</span><br><span class="line">    para%vector_B =&gt; vector_B</span><br><span class="line">    para%vector_C =&gt; vector_C</span><br><span class="line">    <span class="built_in">print</span> *, <span class="string">&quot;A and B&quot;</span></span><br><span class="line">    <span class="keyword">do</span> i = <span class="number">1</span>, N</span><br><span class="line">        <span class="keyword">do</span> j = <span class="number">1</span>, N</span><br><span class="line">            matrix_A(j,i) = <span class="built_in">floor</span>(<span class="number">11</span>*rand())</span><br><span class="line">            <span class="built_in">write</span>(*, <span class="string">&quot;(I4)&quot;</span>, <span class="keyword">advance</span>=<span class="string">&quot;no&quot;</span>) matrix_A(j,i)</span><br><span class="line">        <span class="keyword">end</span> <span class="keyword">do</span></span><br><span class="line">        vector_B(i) = <span class="built_in">floor</span>(<span class="number">11</span>*rand())</span><br><span class="line">        <span class="built_in">write</span>(*, <span class="string">&quot;(I4)&quot;</span>, <span class="keyword">advance</span>=<span class="string">&quot;no&quot;</span>) vector_B(i)</span><br><span class="line">        <span class="built_in">print</span> *</span><br><span class="line">    <span class="keyword">end</span> <span class="keyword">do</span></span><br><span class="line">    <span class="keyword">call</span> CRTS_Init()</span><br><span class="line">    <span class="keyword">call</span> CRTS_athread_spawn(slave_func, para)</span><br><span class="line">    <span class="keyword">call</span> CRTS_athread_join()</span><br><span class="line">    <span class="built_in">print</span> *, <span class="string">&quot;C = A.dot(B)&quot;</span></span><br><span class="line">    <span class="keyword">do</span> i = <span class="number">1</span>, N</span><br><span class="line">        <span class="built_in">write</span>(*, <span class="string">&quot;(I4)&quot;</span>, <span class="keyword">advance</span>=<span class="string">&quot;no&quot;</span>) vector_C(i)</span><br><span class="line">    <span class="keyword">end</span> <span class="keyword">do</span></span><br><span class="line">    <span class="built_in">print</span> *</span><br><span class="line"><span class="keyword">end</span> <span class="function"><span class="keyword">program</span></span> main</span><br></pre></td></tr></table></figure>
+
+<h3 id="工具模块-utility-f90"><a href="#工具模块-utility-f90" class="headerlink" title="工具模块 utility.f90"></a>工具模块 utility.f90</h3><figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">module</span> utility</span><br><span class="line">    <span class="keyword">implicit</span> <span class="keyword">none</span></span><br><span class="line">    <span class="keyword">type</span>, <span class="keyword">public</span> :: ParaType</span><br><span class="line">        <span class="keyword">integer</span> :: N</span><br><span class="line">        <span class="keyword">integer</span>,<span class="keyword">pointer</span> :: matrix_A(:,:)</span><br><span class="line">        <span class="keyword">integer</span>,<span class="keyword">pointer</span> :: vector_B(:)</span><br><span class="line">        <span class="keyword">integer</span>,<span class="keyword">pointer</span> :: vector_C(:)</span><br><span class="line">    <span class="keyword">end</span> <span class="keyword">type</span> ParaType</span><br><span class="line"><span class="keyword">interface</span></span><br><span class="line">    <span class="keyword">integer</span> <span class="function"><span class="keyword">function</span></span> CRTS_smng_get_tid()</span><br><span class="line">    <span class="keyword">end</span> <span class="function"><span class="keyword">function</span></span> CRTS_smng_get_tid</span><br><span class="line"><span class="keyword">end</span> <span class="keyword">interface</span></span><br><span class="line"><span class="keyword">contains</span></span><br><span class="line"><span class="keyword">end</span> <span class="keyword">module</span> utility</span><br></pre></td></tr></table></figure>
+
+<h3 id="从核代码-slave-f90"><a href="#从核代码-slave-f90" class="headerlink" title="从核代码 slave.f90"></a>从核代码 slave.f90</h3><figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">subroutine</span></span> slave_func(para)</span><br><span class="line">    <span class="keyword">use</span> utility</span><br><span class="line">    <span class="keyword">implicit</span> <span class="keyword">none</span></span><br><span class="line">    <span class="keyword">type</span>(ParaType), <span class="keyword">intent</span>(<span class="keyword">in</span>) :: para</span><br><span class="line">    <span class="keyword">integer</span> :: N</span><br><span class="line">    <span class="keyword">integer</span>, <span class="keyword">pointer</span> :: matrix_A(:,:)</span><br><span class="line">    <span class="keyword">integer</span>, <span class="keyword">pointer</span> :: vector_B(:)</span><br><span class="line">    <span class="keyword">integer</span>, <span class="keyword">pointer</span> :: vector_C(:)</span><br><span class="line">    <span class="keyword">integer</span> :: i, j</span><br><span class="line">    <span class="keyword">integer</span> :: myid</span><br><span class="line">    <span class="keyword">integer</span> :: tmp</span><br><span class="line">    myid = CRTS_smng_get_tid()</span><br><span class="line">    N = para%N</span><br><span class="line">    <span class="keyword">if</span>(myid &lt; N) <span class="keyword">then</span></span><br><span class="line">        matrix_A =&gt; para%matrix_A</span><br><span class="line">        vector_B =&gt; para%vector_B</span><br><span class="line">        vector_C =&gt; para%vector_C</span><br><span class="line">        tmp = <span class="number">0</span></span><br><span class="line">        <span class="keyword">do</span> i = <span class="number">1</span>,N</span><br><span class="line">            tmp = tmp + matrix_A(i, myid+<span class="number">1</span>) * vector_B(i)</span><br><span class="line">        <span class="keyword">end</span> <span class="keyword">do</span></span><br><span class="line">        vector_C(myid+<span class="number">1</span>) = tmp</span><br><span class="line">    <span class="keyword">end</span> <span class="keyword">if</span></span><br><span class="line"><span class="keyword">end</span> <span class="function"><span class="keyword">subroutine</span></span> slave_func</span><br></pre></td></tr></table></figure>
+
+<h3 id="Makefile"><a href="#Makefile" class="headerlink" title="Makefile"></a>Makefile</h3><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">FC = swgfortran</span><br><span class="line"><span class="section">main: main.o slave.o utility.o</span></span><br><span class="line">	<span class="variable">$(FC)</span> -mhybrid <span class="variable">$^</span> -o <span class="variable">$@</span></span><br><span class="line"><span class="section">main.o: main.f90 utility.o</span></span><br><span class="line">	<span class="variable">$(FC)</span> -mhost -c <span class="variable">$&lt;</span></span><br><span class="line"><span class="section">slave.o: slave.f90 utility.o</span></span><br><span class="line">	<span class="variable">$(FC)</span> -mslave -c slave.f90</span><br><span class="line"><span class="section">utility.o: utility.f90</span></span><br><span class="line">	<span class="variable">$(FC)</span> -c <span class="variable">$&lt;</span></span><br><span class="line"><span class="section">run:</span></span><br><span class="line">	bsub -I -b -q q_linpack -cgsp 64 -n 1 ./main</span><br><span class="line"><span class="section">clean:</span></span><br><span class="line">	rm -rf *.o main *.mod</span><br></pre></td></tr></table></figure>
+
+<h3 id="程序输出"><a href="#程序输出" class="headerlink" title="程序输出"></a>程序输出</h3><p><img src="/2023/03/30/%E7%A5%9E%E5%A8%81Fortran%E6%A0%B7%E4%BE%8B/1680161547625.png" alt="1680161547625"></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2023/03/13/MPI_CART%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1144,91 +1232,6 @@ Let's see the functions!
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/08/22/cblas-dgemm%E5%8F%82%E6%95%B0%E8%AF%A6%E8%A7%A3/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avator.gif">
-      <meta itemprop="name" content="Dragon">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ding~">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/08/22/cblas-dgemm%E5%8F%82%E6%95%B0%E8%AF%A6%E8%A7%A3/" class="post-title-link" itemprop="url">cblas_dgemm参数详解</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2022-08-22 14:34:18 / Modified: 14:35:08" itemprop="dateCreated datePublished" datetime="2022-08-22T14:34:18+08:00">2022-08-22</time>
-            </span>
-
-          
-            <span id="/2022/08/22/cblas-dgemm%E5%8F%82%E6%95%B0%E8%AF%A6%E8%A7%A3/" class="post-meta-item leancloud_visitors" data-flag-title="cblas_dgemm参数详解" title="Views">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">Views: </span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine: </span>
-    
-    <a title="valine" href="/2022/08/22/cblas-dgemm%E5%8F%82%E6%95%B0%E8%AF%A6%E8%A7%A3/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2022/08/22/cblas-dgemm%E5%8F%82%E6%95%B0%E8%AF%A6%E8%A7%A3/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="cblas-dgemm参数详解"><a href="#cblas-dgemm参数详解" class="headerlink" title="cblas_dgemm参数详解"></a>cblas_dgemm参数详解</h1><p>[dragon](mailto: <a href="mailto:&#119;&#97;&#x75;&#113;&#x61;&#x73;&#x40;&#x67;&#x6d;&#x61;&#105;&#108;&#x2e;&#x63;&#x6f;&#x6d;">&#119;&#97;&#x75;&#113;&#x61;&#x73;&#x40;&#x67;&#x6d;&#x61;&#105;&#108;&#x2e;&#x63;&#x6f;&#x6d;</a>) 22-8-15</p>
-<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cblas.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line">  <span class="type">double</span> A[<span class="number">6</span>] = &#123;<span class="number">1.0</span>, <span class="number">10.0</span>, <span class="number">20.0</span>, <span class="number">30.0</span>, <span class="number">40.0</span>, <span class="number">50.0</span>&#125;;</span><br><span class="line">  <span class="type">double</span> B[<span class="number">6</span>] = &#123;<span class="number">1.0</span>, <span class="number">10.0</span>, <span class="number">20.0</span>, <span class="number">30.0</span>, <span class="number">40.0</span>, <span class="number">60.0</span>&#125;;</span><br><span class="line">  <span class="type">double</span> C[<span class="number">9</span>] = &#123;<span class="number">.5</span>, <span class="number">.5</span>, <span class="number">.5</span>, <span class="number">.5</span>, <span class="number">.5</span>, <span class="number">.5</span>, <span class="number">.5</span>, <span class="number">.5</span>, <span class="number">.5</span>&#125;;</span><br><span class="line">  cblas_dgemm(CblasColMajor, CblasNoTrans, CblasTrans, \</span><br><span class="line">              <span class="number">3</span>, <span class="number">3</span>, <span class="number">2</span>, <span class="number">1</span>, A, <span class="number">3</span>, B, <span class="number">3</span>, <span class="number">0</span>, C, <span class="number">3</span>);</span><br><span class="line">  <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; <span class="number">3</span>; j++)</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="number">3</span>; i++)</span><br><span class="line">      <span class="built_in">printf</span>(<span class="string">&quot;%lf &quot;</span>, C[i*<span class="number">3</span>+j]);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="解释"><a href="#解释" class="headerlink" title="解释"></a>解释</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">cblas_dgemm</span><span class="params">(</span></span><br><span class="line"><span class="params">    	OPENBLAS_CONST <span class="keyword">enum</span> CBLAS_ORDER Order, <span class="comment">//行列主序</span></span></span><br><span class="line"><span class="params">        OPENBLAS_CONST <span class="keyword">enum</span> CBLAS_TRANSPOSE TransA, <span class="comment">//矩阵A转置</span></span></span><br><span class="line"><span class="params">        OPENBLAS_CONST <span class="keyword">enum</span> CBLAS_TRANSPOSE TransB, <span class="comment">//矩阵B转置</span></span></span><br><span class="line"><span class="params">        OPENBLAS_CONST blasint M, <span class="comment">//op(A)的行数</span></span></span><br><span class="line"><span class="params">        OPENBLAS_CONST blasint N, <span class="comment">//op(B)的列数</span></span></span><br><span class="line"><span class="params">        OPENBLAS_CONST blasint K, <span class="comment">//op(A)的列数和op(B)的行数</span></span></span><br><span class="line"><span class="params">        OPENBLAS_CONST <span class="type">double</span> alpha, <span class="comment">//A的缩放</span></span></span><br><span class="line"><span class="params">        OPENBLAS_CONST <span class="type">double</span> *A, <span class="comment">//matrix A</span></span></span><br><span class="line"><span class="params">        OPENBLAS_CONST blasint lda, <span class="comment">//A的第一维度,跟主序有关</span></span></span><br><span class="line"><span class="params">       	OPENBLAS_CONST <span class="type">double</span> *B, <span class="comment">//matrix B</span></span></span><br><span class="line"><span class="params">        OPENBLAS_CONST blasint ldb, <span class="comment">//B的第一维度</span></span></span><br><span class="line"><span class="params">        OPENBLAS_CONST <span class="type">double</span> beta, <span class="comment">//C 的缩放</span></span></span><br><span class="line"><span class="params">        <span class="type">double</span> *C, <span class="comment">//matrix C</span></span></span><br><span class="line"><span class="params">        OPENBLAS_CONST blasint ldc <span class="comment">//C的第一维度</span></span></span><br><span class="line"><span class="params">)</span>;</span><br></pre></td></tr></table></figure>
-
-<p>最终结果为$C=alpha*op(A)<em>op(B)+beta</em>C$</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1300,12 +1303,12 @@ Let's see the functions!
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-count">12</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-count">8</span>
         <span class="site-state-item-name">tags</span>
       </div>
   </nav>
