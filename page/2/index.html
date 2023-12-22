@@ -146,6 +146,232 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/08/22/cuda/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avator.gif">
+      <meta itemprop="name" content="Dragon">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ding~">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/08/22/cuda/" class="post-title-link" itemprop="url">cuda</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-08-22 16:39:25" itemprop="dateCreated datePublished" datetime="2022-08-22T16:39:25+08:00">2022-08-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-08-23 11:13:46" itemprop="dateModified" datetime="2022-08-23T11:13:46+08:00">2022-08-23</time>
+              </span>
+
+          
+            <span id="/2022/08/22/cuda/" class="post-meta-item leancloud_visitors" data-flag-title="cuda" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine: </span>
+    
+    <a title="valine" href="/2022/08/22/cuda/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/08/22/cuda/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="CUDA"><a href="#CUDA" class="headerlink" title="CUDA"></a>CUDA</h1><p>cuda program kernel function:</p>
+<p><code>__global__ void functionName()&#123;&#125;</code></p>
+<p>or</p>
+<p><code>void __global__ functionName()&#123;&#125;</code></p>
+<hr>
+<h3>Hello World</h3>
+<h4>Hello.cu</h4>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="function">__global__ <span class="type">void</span> <span class="title">GPU_print</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Hello World\n&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc,<span class="type">char</span> **argv)</span></span>&#123;</span><br><span class="line">    GPU_print&lt;&lt;&lt;<span class="number">2</span>,<span class="number">2</span>&gt;&gt;&gt;();</span><br><span class="line">    <span class="built_in">cudaDeviceSynchronize</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Compile:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nvcc Hello.cu -o Hello</span><br></pre></td></tr></table></figure>
+
+<p>Execute:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./Hello</span><br></pre></td></tr></table></figure>
+
+<p>Result:</p>
+<p><code>Hello World</code></p>
+<p><code>Hello World</code></p>
+<p><code>Hello World</code></p>
+<p><code>Hello World</code></p>
+<p>why?  &lt;&lt;&lt;2,2&gt;&gt;&gt;</p>
+<hr>
+<p>CUDA kernel run in Device. We should realise the differences of Host datas with Device datas.</p>
+<p>Let’s see the CUDA functions !</p>
+<p>cudaMalloc(</p>
+<pre><code>                    (void\*\*)&amp;ptr,  int \*ptr -&gt; (void\*\*)&amp;ptr 
+
+                    size, sizeof(ptr_type);
+
+                )
+</code></pre>
+<p>ptr will get some places from Device</p>
+<p>cudaMemcpy(</p>
+<pre><code>                dst, date to dst
+
+                src, date from src
+
+                size, how many bytes
+
+                kind,where to where(cudaMemcpyHostToDevice,cudaMemcpyDeviceToHost and ......)
+
+                )
+</code></pre>
+<p>cudaDeviceSynchronize()</p>
+<p>Wait operate in Device finish</p>
+<hr>
+<p>GPU has lot’s of same things with CPU</p>
+<p>different kinds of memory is one of the same things.</p>
+<h5>dynamic common Element</h5>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">double</span> *a;</span><br><span class="line"><span class="type">int</span> M=<span class="number">1000</span>;</span><br><span class="line"><span class="built_in">cudaMalloc</span>((<span class="type">void</span>**)&amp;a,M);</span><br><span class="line"><span class="built_in">cudaMemcpy</span>(....);</span><br><span class="line">kernel&lt;&lt;&lt;gridSize,blockSize&gt;&gt;&gt;(a);</span><br></pre></td></tr></table></figure>
+
+<h5>static global Element</h5>
+global and static
+
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">__device__ <span class="type">double</span> a[<span class="number">5</span>];</span><br><span class="line">__device__ <span class="type">int</span> b;</span><br></pre></td></tr></table></figure>
+
+<p>compiler should know the size of static global Element,and we need’t be used by arg-way</p>
+<p>needn’t <code>kernel&lt;&lt;&lt;1,1&gt;&gt;&gt;(a);</code></p>
+<h5>constant Element by arg-way</h5>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> a=<span class="number">1</span>;</span><br><span class="line">kernel&lt;&lt;&lt;<span class="number">1</span>,<span class="number">1</span>&gt;&gt;&gt;(a);</span><br></pre></td></tr></table></figure>
+
+<p>read-only and max size is 4KB</p>
+<h5>constant Element by __constant__</h5>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">__constant__ <span class="type">int</span> a=<span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<p>read-only and max size is 64 in most NVIDIA GPU</p>
+<p>How to copy datas from/to constant Element ?</p>
+<p>cudaMemcpyFromSymbol(</p>
+<pre><code>                                            dst, datas to dst
+
+                                            src, datas from src
+
+                                            copykind, cudaMemcpyDeviceToHost
+
+                                            )
+</code></pre>
+<p>cudaMemcpyToSymbol(</p>
+<pre><code>                                        dst, datas to dst
+
+                                        src, datas from src
+
+                                        copykind, cudaMemcpyHostToDevice
+
+                                        )
+</code></pre>
+<h5>dynamic shared memory</h5>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">__global__ <span class="type">void</span> <span class="title">kernel</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="type">int</span> n=<span class="number">10</span>;</span><br><span class="line">	__shared__ <span class="type">int</span> a[n];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>read and write, 64KB per block. same block with same shared memory value</p>
+<h5>static shared memory</h5>
+outside:
+
+<p><code>kernel&lt;&lt;&lt;1,1,sharedMemorySize&gt;&gt;&gt;()</code></p>
+<p>inside:</p>
+<p><code>extern __shared__  double a[]</code></p>
+<p>not *a, pointer isn’t array</p>
+<h5>register memory</h5>
+fast and small
+
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">__global__ <span class="type">void</span> <span class="title">kernel</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="type">int</span> a=<span class="number">1</span>;</span><br><span class="line">    <span class="type">const</span> <span class="type">int</span> b=<span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5>dynamic unified memory</h5>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">double</span> *x,*y;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> M=<span class="built_in">sizeof</span>(<span class="type">double</span>)*<span class="number">10000</span>;</span><br><span class="line"><span class="built_in">cudaMallocManaged</span>((<span class="type">void</span>**)&amp;x,M);</span><br><span class="line"><span class="built_in">cudaMallocManaged</span>((<span class="type">void</span>**)&amp;y,M);</span><br><span class="line">*x=<span class="number">1</span>;</span><br><span class="line">*y=<span class="number">2</span>;</span><br><span class="line">kernel&lt;&lt;&lt;gridSize,blockSize&gt;&gt;&gt;(x,y);</span><br></pre></td></tr></table></figure>
+<h5>static unified memory</h5>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">__device__ __managed__ <span class="type">int</span> ret[<span class="number">1000</span>];</span><br><span class="line">__device__ __managed__ <span class="type">int</span> a;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    kernel&lt;&lt;&lt;gridSize,blockSize&gt;&gt;&gt;();</span><br><span class="line">    <span class="built_in">cudaSynchronize</span>();</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>,a);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5>Free Memory</h5>
+`cudaFree(void* ptr)`
+
+<hr>
+<h3>Atoi operate</h3>
+look like synchronize, but really without synchronize
+
+<p><a href="%E5%8E%9F%E5%AD%90%E5%87%BD%E6%95%B0%E8%A1%A8.md">Table</a></p>
+<h3>CUDA Stream</h3>
+Let's see the functions!
+
+<p><strong>type:</strong> cudaStream_t  stream</p>
+<p>cudaStreamCreate(&amp;stream)</p>
+<p>cudaStreamDestory(stream)</p>
+<p>cudaStreamSynchronize(stream), wait stream finish</p>
+<p>cudaStreamQuery(stream), check stream finish or not, <strong>cudaSuccess</strong> or <strong>cudaErrorNotReady</strong></p>
+<p><strong>run in stream :</strong> <code>kernel&lt;&lt;&lt;gridSize, blockSize,shared_size,stream&gt;&gt;&gt;();</code></p>
+<p>cudaMemcpyAsync(</p>
+<pre><code>                                void *dst
+
+                                const void *src
+
+                                size_t count
+
+                                enum cudaMemcpyKind kind
+
+                                cudaStream_t stream, if you want to use default stream, by 0
+
+                                )
+</code></pre>
+<p>which datas can be MemcpyAsync ? </p>
+<p><code>cudaMallocHost(void**ptr, size_t size)</code></p>
+<p><code>cudaHostAlloc(void**ptr, size_t size,size_t flag)</code></p>
+<p>if flag==cudaHostAllocDefault, cudaMallocHost equal to cudaHostAlloc</p>
+<p><strong>Free:</strong><code>cudaFreeHost(void* ptr)</code></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2022/08/22/cblas-dgemm%E5%8F%82%E6%95%B0%E8%AF%A6%E8%A7%A3/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -390,12 +616,12 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-count">13</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-count">9</span>
         <span class="site-state-item-name">tags</span>
       </div>
   </nav>
