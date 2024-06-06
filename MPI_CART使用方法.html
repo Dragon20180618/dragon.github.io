@@ -1,0 +1,309 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>MPI_CART使用方法 - DailyNotes</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="内存使用情况检查.html"><strong aria-hidden="true">1.</strong> 内存使用情况检查</a></li><li class="chapter-item expanded "><a href="神威Fortran样例.html"><strong aria-hidden="true">2.</strong> 神威Fortran样例</a></li><li class="chapter-item expanded "><a href="cblas_dgemm参数详解.html"><strong aria-hidden="true">3.</strong> cblas_dgemm参数详解</a></li><li class="chapter-item expanded "><a href="cuda.html"><strong aria-hidden="true">4.</strong> CUDA</a></li><li class="chapter-item expanded "><a href="debug-fortran-in-vscode.html"><strong aria-hidden="true">5.</strong> debug-fortran-in-vscode</a></li><li class="chapter-item expanded "><a href="gpt-3-5-turbo接口调用方法.html"><strong aria-hidden="true">6.</strong> gpt-3.5-turbo接口调用方法</a></li><li class="chapter-item expanded "><a href="make_unique_with_cuda.html"><strong aria-hidden="true">7.</strong> make_unique_with_cuda</a></li><li class="chapter-item expanded "><a href="makefile-wildcard.html"><strong aria-hidden="true">8.</strong> makefile-wildcard</a></li><li class="chapter-item expanded "><a href="MPI_CART使用方法.html" class="active"><strong aria-hidden="true">9.</strong> MPI_CART使用方法</a></li><li class="chapter-item expanded "><a href="OpenBlas-Make-Test.html"><strong aria-hidden="true">10.</strong> OpenBlas-Make-Test</a></li><li class="chapter-item expanded "><a href="pytorch-geometric安装.html"><strong aria-hidden="true">11.</strong> pytorch-geometric安装</a></li><li class="chapter-item expanded "><a href="x11-with-color.html"><strong aria-hidden="true">12.</strong> x11-with-color</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">DailyNotes</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <p>date: 2023-03-13 15:50:12</p>
+<p>tags:</p>
+<h2 id="mpi_cart_create"><a class="header" href="#mpi_cart_create">MPI_Cart_Create</a></h2>
+<p>将一维的通信空间转为多维</p>
+<p>接口</p>
+<pre><code class="language-fortran">subroutine MPI_Cart_shift(comm, direction, disp, rank_source, rank_dest)
+        integer,intent(in)  ::comm, 		!通信域
+        integer,intent(in)  ::direction,    !维度序号
+        integer,intent(in)  ::disp,		   	!偏移量
+  		integer,intent(out) ::rank_source,	!向本进程发送数据的进程 如果没有则为-1
+  	    integer,intent(out) ::rank_dest		!本进程发送数据的目的进程 如果没有则为-1
+end subroutine MPI_Cart_shift
+</code></pre>
+<h2 id="测试"><a class="header" href="#测试">测试</a></h2>
+<ul>
+<li>查看period对网络生成的影响</li>
+</ul>
+<pre><code class="language-fortran">program main
+    use mpi
+    integer ierr
+    integer rank,size
+    integer np_dim(2)
+    logical period(2)
+    integer mpi_world_cart
+    integer src,dest
+    np_dim=3
+    period(1)=.false.
+    period(2)=.true.
+    call MPI_Init(ierr)
+    call MPI_Cart_create( MPI_COMM_WORLD    &amp;
+                            , 2                 &amp;
+                            , np_dim            &amp;
+                            , period            &amp;
+                            , .false.           &amp;
+                            , mpi_world_cart    &amp;
+                            , ierr              &amp;
+                            )
+    call MPI_Comm_rank(mpi_world_cart,rank,ierr)
+    call MPI_Comm_size(mpi_world_cart,size,ierr)
+    call MPI_Cart_shift(mpi_world_cart, 0, 1, src, dest,ierr)
+    call MPI_Finalize(ierr)
+    print *,rank,"of",size,"|",src,"of",dest,"|",(ierr==0)
+end program main
+</code></pre>
+<p>输出</p>
+<pre><code class="language-shell">           6 of           9 |           3 of          -1 | T 
+           1 of           9 |          -1 of           4 | T
+           2 of           9 |          -1 of           5 | T
+           0 of           9 |          -1 of           3 | T
+           5 of           9 |           2 of           8 | T 以此条为例，5从2接收，发送到8
+           4 of           9 |           1 of           7 | T
+           3 of           9 |           0 of           6 | T
+           7 of           9 |           4 of          -1 | T
+           8 of           9 |           5 of          -1 | T
+</code></pre>
+<p>第一维度的period设置为.false.，导致网络在第一维度不是环状的，而是线性的；</p>
+<p>第二维度的period设置为.true.，导致网络在第二维度是环状的，最后一个进程的下一个进程是第一个进程。</p>
+<p>这种设置方式会产生一个类似圆柱形的结构，圆柱的底是头尾连接的，圆柱的高是头尾分离的。</p>
+<p>因为MPI_Cart_shift选取的维度是第一维度，且period(1)==.false.，所以0~2进程的src为-1，6~8进程的dest为-1。</p>
+<p>以下是period(1)==.true.时程序的输出。</p>
+<pre><code class="language-shell">           0 of           9 |           6 of           3 | T
+           6 of           9 |           3 of           0 | T
+           8 of           9 |           5 of           2 | T 8从5接受，发送到2
+           7 of           9 |           4 of           1 | T
+           1 of           9 |           7 of           4 | T
+           3 of           9 |           0 of           6 | T
+           2 of           9 |           8 of           5 | T
+           4 of           9 |           1 of           7 | T
+           5 of           9 |           2 of           8 | T
+</code></pre>
+<p>MPI_Cart_Create函数的reorder参数是用来指定创建出来的Cartesian拓扑是否可以被重新排序的。具体来说，如果reorder参数被设置为1，那么MPI库就可以为了提高性能而重新排列进程的拓扑结构。如果reorder参数被设置为0，那么MPI库就必须按照进程的原始顺序来创建Cartesian拓扑结构。</p>
+<p>当reorder参数被设置为1时，MPI库可以为了提高性能而重新排列进程的拓扑结构。例如，假设原始的进程布局如下所示：</p>
+<pre><code class="language-text">0 1 2 3
+4 5 6 7
+8 9 10 11
+</code></pre>
+<p>如果reorder参数被设置为1，MPI库可以重新排列进程的拓扑结构，例如：</p>
+<pre><code class="language-text">0 4 8 9
+1 5 6 10
+2 3 7 11
+</code></pre>
+<p>这样做的目的是为了使相邻的进程在物理空间中更接近，从而减少通信延迟。但是需要注意的是，重新排序进程的拓扑结构可能会影响到原始程序的正确性，因此在使用该特性时需要小心谨慎。</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="makefile-wildcard.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="OpenBlas-Make-Test.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="makefile-wildcard.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="OpenBlas-Make-Test.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>
