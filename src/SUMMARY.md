@@ -13,3 +13,6 @@
 + [pytorch-geometric安装](./pytorch-geometric安装.md)
 + [x11-with-color](./x11-with-color.md)
 + [Fortran运行时加载动态库](./Fortran运行时加载动态库.md)
+
++ [cuda github workflow](./cuda_github_workflow.md)
+
